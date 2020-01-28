@@ -1,0 +1,112 @@
+
+
+References
+----------
+
+The following procedure is based on
+
+    Raspberry Pi SD Card Set Up (Partitioning anf formatting a 32+GB card)
+    https://www.youtube.com/watch?v=tsh0Xt9M_8g
+
+and
+
+    Formatting an SDXC card for used with NOOBS
+    https://www.raspberrypi.org/documentation/installation/sdxc_formatting.md
+
+The main difference between the two is the youtube version uses only native
+windows tools and manual procedures.  The other gives techniques for Windows,
+Mac, and Linux.
+
+
+Background
+-----------
+
+Notes say that Raspberry boot loader can work only with FAT16 or FAT32
+and that this is a permanent limitation
+
+Any card > 32G is an SDXC card and is formatted with exFAT file system
+and cannot be used as is for the RPi boot disk
+
+The essence of the procedure is to change the format of the card to FAT32 so
+that the cards can be used as the boot disk.
+
+
+
+The Rasperrypi.org method
+-------------------------
+
+Tried the Rasperrypi.org method.  Got nowhere.  Used sudo gparted to delete,
+create, and format a FAT32 drive.  Copied NOOBS to it, but it would not boot.
+Believe I did something wrong but don't know what.
+
+Eventually, I used the RPi SD Card copy utility to duplicate the card I had
+made earlier using the youtube mehod.  The card copy was very fast.  Finished
+in about 30 minutes.
+
+
+
+The Youtube Method
+------------------
+
+On a Windows system --
+
+1.  Download NOOBS from
+
+         https://www.raspberrypi.org/downloads/noobs/
+
+    When downloaded, NOOBS will be in a zip file.  Extract from zip file into
+    a folder on disk.  Near end of procedure, NOOBS will be copied to the SD
+    Card
+
+    As of June 5, 2019, latest version of NOOBS is 3.0.1 released on
+    2019-04-08
+
+2.  If card needs to be reformatted, use formatter from SDCard.org
+    Format card as one partition with exFAT file system
+
+3.  Open Computer Management, select Disk Management, find drive letter of SD
+    Card
+
+4.  Run DiskPart. Enter 'list volume' to show all drive volumes.  Find drive
+    letter of SD Card The two should agree.  Mine is K.
+
+5.  In DiskPart,
+
+                select volume X       (mine is 8)
+                list partition
+                delete partition      (disk management shows 'Unallocate')
+
+     Close DiskPart
+
+6.  In Disk Management, right click, select New Simple Volume Wizard.  Select --
+
+       Set volume size to 10000
+       Next
+       Assign drive letter -- default
+       Next
+       Format -- select FAT 32
+       Allocation unit -- default
+       Volume label -- something unique to make it easily identifiable
+       Quict Format
+       Format
+       Finish
+
+       Disk Management will show a 9.77 GB FAT32 primary partition and a large
+       block of unallocated space
+
+       Close Disk Management
+       
+       Copy all of NOOBS to SD Card
+
+       Eject disk
+
+7.  Insert SD Card into RPi, turn on power.  Green light should flash and
+    partition will be resized.  Will boot to NOOBS install screen.  
+    
+    Select full Raspian OS, the recommended OS for RPi.
+    
+    Install will take a while.
+    
+8.  Power off and reboot.  
+
+    Hope it works.

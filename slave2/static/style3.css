@@ -1,0 +1,70 @@
+body {
+  font-family: "helvetica", sans-serif;
+  text-align: center;
+}
+#holder { 
+       top: 20vh;
+       left: 10vh;
+       width: 10vh;
+       height: .25vh;
+       position: absolute;
+
+
+}
+#container{
+       top: 15vh;
+       width: 25vh;
+       height: .25vh;
+       position: absolute;
+       background-color: red;
+       -webkit-transition: 3s;
+       -moz-transition: 3s;
+       -ms-transition: 3s;
+       -o-transition: 3s;
+       transition: 3s;       
+}
+#lastPressed{
+    position: absolute;
+    top: 2vh;
+    width: 100vh;
+    height: 8vh;
+    font-size: 4vh;
+    left: 10vh;
+}
+#angle{
+ top: 12vh;
+ position: absolute;
+ left: 10vh;
+ font-size: 4vh;
+}
+.btn-group-lg.btn-group-vertical{
+   position: absolute;
+   left: 60vh;
+}
+.btn.btn-primary.btn-block.btn-lg{
+   padding: 3vh;
+   border: 1vh solid grey;
+}
+
+.btn-custom {
+  background-color: hsl(201, 100%, 55%) !important;
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#d1eeff", endColorstr="#19aeff");
+  background-image: -khtml-gradient(linear, left top, left bottom, from(#d1eeff), to(#19aeff));
+  background-image: -moz-linear-gradient(top, #d1eeff, #19aeff);
+  background-image: -ms-linear-gradient(top, #d1eeff, #19aeff);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #d1eeff), color-stop(100%, #19aeff));
+  background-image: -webkit-linear-gradient(top, #d1eeff, #19aeff);
+  background-image: -o-linear-gradient(top, #d1eeff, #19aeff);
+  background-image: linear-gradient(#d1eeff, #19aeff);
+  border-color: #19aeff #19aeff hsl(201, 100%, 46%);
+  color: #333 !important;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.59);
+  -webkit-font-smoothing: antialiased;
+}
+
+#shutoff {
+  position: absolute;
+  top: 100vh;
+
+}

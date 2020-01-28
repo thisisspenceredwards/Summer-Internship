@@ -1,0 +1,41 @@
+
+See 
+	https://websockets.readthedocs.io/en/stable/intro.html
+
+
+Notes for WebSockets Tutorial Secure Server
+
+Need self signed security key & certificate in 'localhost.pem'
+
+Found instructions at https://stackoverflow.com/questions/12871565/how-to-create-pem-files-for-https-web-server 
+
+Create using opensll utility
+
+openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem
+
+Entered
+2 letter country code:  US
+State:					California
+City:					Santa Cruz
+Company name: 			Com Pany Name, Inc
+Dept					SW Eng
+email					fedwards@cruzio.com
+Common Name  			localhost
+
+
+Openssl generated two files key.pem and cert.pem
+
+Combined these into localhost.pem, put key.pem first then cert.pem
+
+-----BEGIN PRIVATE KEY-----
+MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCt0ThbLngfA+Y0
+...
+pWmfo/Us3O2JnN4fiUwkdl6v
+-----END PRIVATE KEY-----
+-----BEGIN CERTIFICATE-----
+MIIEEjCCAvqgAwIBAgIJAJHD7RzydViOMA0GCSqGSIb3DQEBCwUAMIGdMQswCQYD
+...
+Sb0RkWxAW4L/p2vhBipVJ2d+tfqW68NvYP/YF631BN2+3wR/lgU=
+-----END CERTIFICATE-----
+
+

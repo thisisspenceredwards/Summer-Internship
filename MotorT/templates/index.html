@@ -1,0 +1,36 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}
+Websockets tutorial
+{% endblock %}
+
+
+{% block content %}
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+<script type="text/javascript" src="{{url_for('static', filename='jQueryfordevelopment.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='13.js') }}"></script>
+ <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous" />
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style3.css') }}">
+
+<div class=page>
+
+    <div class = "btn-group-lg btn-group-vertical">
+    <button id="heldButtonWest" type="button" class="btn btn-primary btn-lg mb-3">West</button>
+    <button id="heldButtonEast" type="heldButtonEast" class="btn btn-primary btn-lg mb-3">East</button>
+    <button type="button" class="btn btn-primary btn-lg" onclick="east_for_duration()">East for Duration</button>
+    <button type="button" class="btn btn-primary btn-lg" onclick="west_for_duration()">West for Duration</button>
+    <button type="button" class="btn btn-primary btn-lg" onclick="start_solar_predicting()">Track Sun</button>
+    <button type="button" class="btn btn-primary btn-lg" onclick="go_to_vertical()">Vertical</button>
+    <button type="button" class="btn btn-primary btn-lg" onclick="go_to_horizontal()">Horizontal</button>
+    <button type="button" class="btn btn-primary btn-lg" onclick="halt_movement()">Halt Movement</button>
+    <button type="button" class="btn btn-primary btn-lg" onclick="start_solar_loop()">Solar Loop</button>
+    <button type="button" class="btn btn-primary btn-lg" onclick="halt_solar_loop()">Stop Loop</button>
+
+    </div>
+
+</div>
+{% endblock %}
+
+
+
+
+

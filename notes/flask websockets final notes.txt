@@ -1,0 +1,18 @@
+
+From
+	https://tutorials.technology/tutorials/61-Create-an-application-with-websockets-and-flask.html
+
+Could not get the tutorial to work
+Abandoned the tutorial; downloaded the Final code from GitHub
+
+Had to massage that code
+	had recursive includes and I don't remember what
+	
+Put all of the python code into a single file and .... it worked
+
+Get Alert with each click
+
+JSON messages are inconsistent
+	clicking the json button does not always result in a json message
+	if I reload the page, I get a json message everytime
+	

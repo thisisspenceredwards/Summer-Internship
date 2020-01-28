@@ -1,0 +1,52 @@
+{% extends 'bootstrap/base.html'  %}
+
+{% block content %}
+
+<div id = "map">
+{% include 'base.html' %}
+{% include 'raspberry.html' %}
+{{ mymap.js }} 
+
+<body onload=addMarkerEventListeners()>
+{{mymap.html}} 
+
+
+
+<!--
+	When the body of the web page (the document) has fully loaded, the system generates
+	an 'onload' event.  We catch that event here, and use it to add listeners to all of
+	the map markers.  (See the function addMarkerEventListeners, below).  There is one 
+	map marker per raspberry on the map.
+-->
+
+{{mymap.html}} 
+
+<script>
+
+function addMarkerEventListeners() {
+	console.log('addMarkerEventListeners');
+	for (i =0; i < mymap_markers.length; i++) {
+    	mymap_markers[i].addListener('click', function() {
+			console.log('inside markerEventListener');
+//			console.log(window.location);
+//			console.log('url=', window.location.origin, '/', this.position.lat().toString(), ',', this.position.lng().toString());
+//			console.log('url=', window.location.origin, '/', this.title);
+//			console.log('url=>' + window.location.origin + '/' + this.title + '<');
+			var newURL = window.location.origin + window.location.pathname + this.title;
+			console.log('newURL=>' + newURL + '<');
+			//window.location = newURL;
+                        console.log(this.title)
+                        let raspberry = this.title
+                        openMyMenu(raspberry)
+        });
+	}
+   }
+
+</script>
+</div>
+{% endblock %}
+
+
+
+
+

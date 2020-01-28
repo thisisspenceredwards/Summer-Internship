@@ -1,0 +1,447 @@
+from __main__ import socketio
+from datetime import datetime as dt, timezone
+#import logging
+import sys
+import threading
+import time
+from pysolar.solar import get_azimuth
+#import pytz
+import SysLog
+#from LogAllOn import LogAllOn
+#from LogAllOff import LogAllOff
+#from LogF import LogF
+#from LogS import LogS
+try:
+    print("sys.path.append(../common)")
+    sys.path.append('../common')
+    import Constants
+except ImportError:
+    print("sys.path.append(/home/pi/raspberry20/common)")
+    sys.path.append('/home/pi/raspberry20/common')
+    import Constants
+from Configuration import ConfigListOfDict
+
+"""
+    force commit
+"""
+
+###########################################################################################
+###########################################################################################
+###########################################################################################
+###########################################################################################
+#
+# To comment out the rPi specific code, change comments at beginning and ending
+# of comment blocks around the rPi code.
+#
+# Beginning of Code Block
+#
+#       Change
+#               """ #@GPIO@#   Enable/Disable GPIO            <<<< Disable GPIO
+#       to
+#               ### #@GPIO@#   Enable/Disable GPIO            <<<< Enable GPIO
+#
+# End of Code Block
+#
+#       Change 
+#               #@GPIO@# """                                <<<< Disable GPIO
+#       to
+#               #@GPIO@# ###                                <<<< Enable GPIO
+#
+
+### #@GPIO@#    Enable/Disable GPIO
+import RPi.GPIO as GPIO
+##@GPIO@##        Enable/Disable #@GPIO@# ###
+
+###########################################################################################
+###########################################################################################
+###########################################################################################
+###########################################################################################
+
+
+class ThreadController:
+    def __init__(self):
+        self.__thread = None
+        self.__stop_thread = False
+
+    def start_thread(self, method):
+        logger = SysLog.getLogger()
+        logger.debugs("start_thread called")
+        logger.debugs("self.__thread")
+        logger.debugs(self.__thread)
+        if self.__thread is None:
+            self.__set_stop_thread(False)
+            self.__thread = threading.Thread(target=method)
+            self.__thread.start()
+            print("thread is none")
+            return 0
+        return -1
+
+    def stop_thread(self):
+        logger = SysLog.getLogger()
+        logger.debugs("stop thread called")
+        self.__set_stop_thread(True)
+        self.set_thread(None)
+
+    def get_thread(self):
+        return self.__thread
+
+    def set_thread(self, new):
+        self.__thread = new
+
+    def get_stop_thread(self):
+        return self.__stop_thread
+
+    def __set_stop_thread(self, value):
+        self.__stop_thread = value
+
+
+GPS_COOR_LAT = 0
+GPS_COOR_LNG = 1
+
+    __current_angle = 39 #pretend calibrate has been called
+    __manual_stop_time_angle = None
+    __Thread = None
+    @staticmethod
+    def getInstance():
+        if SolarThread.__instance is None:
+            SolarThread.__instance = SolarThread()
+        print("This is instance: ", SolarThread.__instance)
+        return SolarThread.__instance
+
+    def __init__(self):
+        super().__init__()
+        logger = SysLog.getLogger()
+        logger.debugs("init called")
+        if SolarThread.__instance is not None:
+            raise Exception("Only one Solar Thread allowed")
+#        SolarThread.__rotate_panel_animation(SolarThread.__current_angle)
+        return
+
+
+    def calibrate_solar_panels(self):
+     #   SolarThread.__turn_on_east_relay()
+      #  time.sleep(900) #make constant
+        if SolarThread.__thread != None:
+           print("SolarThread.__thread != None")
+           return -1
+        else:
+           SolarThread.__thread = (self)
+
+        print("find position called")
+        current_time = SolarThread.get_time()
+        print("current_time: ", current_time)
+        azimuth = get_azimuth(-121.9707712,36.98102, current_time) # must be 135 degrees before moving solar panels        
+        print("this is azimuth: ", azimuth)
+        if azimuth < 135: #make 135 a constant
+            return
+        else:
+            print('moving to correct position')
+            angle_to_move = azimuth - 135 #make constant
+            if angle_to_move > 90:
+                angle_to_move = 90
+            
+            secsPerDeg = ConfigListOfDict.getInstance().findConfigDict(self.__macAddr, Constants.CFG_VALUE_SYS_TYPE_SLAVE).getTimeToMoveOneDegree()
+            time_to_move = time.time() + (angle_to_move * secsPerDeg)
+            SolarThread.__turn_on_west_relay()
+            print("time to sleep: ", time_to_move - time.time())
+            while(time.time() <= time_to_move and super().get_stop_thread() == False):
+                time.sleep(1) #constant
+            SolarThread.__turn_off_west_relay()
+            SolarTracker.__current_angle = -45
+            print("#####################################################turned off thread##########################################")  
+            SolarThread.__thread = None
+            
+
+    def setMacAddr(self, macAddr):
+        print("SETMACADDR", macAddr)
+        logger = SysLog.getLogger()
+        logger.debugs("macAddr Solar.py: %s" % macAddr)
+        SolarThread.__macAddr = macAddr
+
+    def get_current_angle(cls):
+        return SolarThread.__current_angle
+
+    def trackSolar(self):
+        logger = SysLog.getLogger()
+        myConfigDict = ConfigListOfDict.getInstance().findConfigDict(SolarThread.__macAddr, Constants.CFG_VALUE_SYS_TYPE_SLAVE)
+        secsPerDeg = myConfigDict.getTimeToMoveOneDegree()
+        print(secsPerDeg)
+        gpsCoor = myConfigDict.getGpsCoor()
+        gps_lat = gpsCoor[GPS_COOR_LAT]
+        gps_lng = gpsCoor[GPS_COOR_LNG]
+        last_recorded_azimuth = None
+        if SolarThread.__thread != None:
+            print("SolarThread.__thread!=None")
+            return -1
+        else:
+            SolarThread.__thread = self
+        #if SolarThread.__current_angle == None: Commented out for testing
+        #    print("Please call Calibrate First")
+        #    super().stop_thread()
+
+        if SolarThread.__manual_stop_time_angle is not None:
+            angle_to_move = SolarThread.__compute_change_in_azimuth()
+
+            if SolarThread.__angle_to_move > 0:
+                logger.debugs("Solar Thread turn on west relay")
+                SolarThread.increment_panel_angle(angle_to_move, 'WEST')
+
+            elif SolarThread.__angle_to_move < 0:
+                logger.debugs("Solar Thread turn on east relay")
+                SolarThread.increment_panel_angle(angle_to_move, 'EAST')
+        #Panel should be in correct position from code above
+        SolarThread.__manual_stop_time_angle = None
+
+        print("This is SolarThread.__current_angle", SolarThread.__current_angle)
+        if last_recorded_azimuth == None:
+            last_recorded_azimuth = get_azimuth(38.164481,-120.9582794, SolarThread.get_time())
+        while True:
+            logger.debugs("SolarThread")
+            if super().get_stop_thread():
+                logger.debugs("THREAD STOPPED")
+                SolarThread.__thread = None
+                break
+            current_azimuth = get_azimuth(38.164481,-120.9582794, SolarThread.get_time())  #gps_lat, gps_lng, current_time, 0)
+            new_angle = current_azimuth - 190 # change back to 180!!!!
+            if new_angle >= -45 and new_angle <= 45: #when we would start moving the panel
+                print("This is new angle: ", new_angle)
+                print("This is current angle: ", SolarThread.__current_angle)
+                difference = new_angle - SolarThread.__current_angle
+                print("This is difference: ", difference)
+                if difference >= Constants.ST_ANGLE:
+                    print("Larger than")
+                    self.increment_panel_angle(difference, 'WEST')
+                elif difference < (-1 * Constants.ST_ANGLE):
+                    print("Smaller than")
+                    self.increment_panel_angle(difference, 'EAST')
+                last_recorded_azimuth = current_azimuth
+                time.sleep(Constants.ST_TIME_WAIT_SHORT)
+            elif new_angle >= 45 and SolarThread.__current_angle <= 44.5:   
+                difference = 45
+                self.increment_panel_angle(difference, 'WEST')
+            elif new_angle <= -45 and SolarThread.__current_angle >= -44.5:
+                difference = -45 
+                self.increment_panel_angle(difference, 'EAST')
+            else:
+                time.sleep(Constants.ST_TIME_WAIT_SHORT)
+                logger.debugs("new angle %s" %new_angle)
+                logger.debugs("current angle %s" %SolarThread.__current_angle)
+
+    def increment_panel_angle(self, angle_to_move, direction):
+        secsPerDeg = ConfigListOfDict.getInstance().findConfigDict(SolarThread.__macAddr, Constants.CFG_VALUE_SYS_TYPE_SLAVE).getTimeToMoveOneDegree()
+
+
+        if angle_to_move + SolarThread.__current_angle > 45:
+            print( ">45")
+            angle_to_move = 45 - SolarThread.__current_angle   # +1 for good luck  find reasonable time to reach max angle
+        elif angle_to_move + SolarThread.__current_angle < -45:
+            print( "<45")
+            angle_to_move = -45 - SolarThread.__current_angle  # +1 for good luck  find reasonable time to reach max angle
+        time_to_move = time.time() + (abs(angle_to_move) *  10) + 2
+        print("time to move :", time_to_move - time.time())
+        if direction == 'WEST':
+            sign = 1
+            SolarThread.__turn_on_west_relay()
+        elif direction == 'EAST':
+            sign = -1
+            SolarThread.__turn_on_east_relay()
+        while(time.time() <= time_to_move and super().get_stop_thread() != True):
+                print("within increment while loop")
+                SolarThread.__current_angle = SolarThread.__current_angle + (sign*(1/(2*10)))
+                SolarThread.__update_solar_animation(SolarThread.__current_angle)
+                time.sleep(.5) #constant
+                print(SolarThread.__current_angle) 
+        if direction == 'WEST':
+            SolarThread.__turn_off_west_relay()
+        elif direction == 'EAST':
+            SolarThread.__turn_off_east_relay()
+
+
+   # @staticmethod
+   # def __rotate_panel_animation(amount_to_move):
+   #     print("rotate_panel_animation")
+   #     socketio.emit('rotate_panel_animation_js', amount_to_move)
+    
+    def __update_solar_animation(cls):
+        socketio.emit('rotate_panel_animation_js', SolarThread.__current_angle)
+
+
+    @staticmethod
+    def get_time():
+        dtime = dt.now()
+        return dtime.replace(tzinfo=timezone.utc)
+
+    def turn_on_west_relay_manual(cls):
+        logger = SysLog.getLogger()
+        secsPerDeg = ConfigListOfDict.getInstance().findConfigDict(self.__macAddr, Constants.CFG_VALUE_SYS_TYPE_SLAVE).getTimeToMoveOneDegree()
+        distance_to_end = SolarThread.__degrees_at_end - SolarThread.__degrees_from_start
+        max_time = distance_to_end * secsPerDeg
+        SolarThread.__manual_start_time_in_seconds = SolarThread.__turn_on_west_relay()
+        while (SolarThread.__time_in_seconds(SolarThread.get_time()) - SolarThread.__manual_start_time_in_seconds) < max_time:
+            logger.debugs("sleeping")
+            ### #@GPIO@#      Enable/Disable GPIO
+            if Constants.RELAY_WEST ==  GPIO.LOW:
+                return 0
+            ##@GPIO@##        Enable/Disable #@GPIO@# ###
+            time.sleep(.5)
+        #SolarThread.__turn_off_west_relay_manual()  # <<<< fle::no member in class
+        SolarThread.__bypass_west_off = True
+
+    def turn_on_east_relay_manual(self):
+        logger = SysLog.getLogger()
+        # distance_to_start = SolarThread.__degrees_from_start  <<<< fle::unused
+        secsPerDeg = ConfigListOfDict.getInstance().findConfigDict(self.__macAddr, Constants.CFG_VALUE_SYS_TYPE_SLAVE).getTimeToMoveOneDegree()
+        max_time = SolarThread.__degrees_from_start * secsPerDeg
+        SolarThread.__manual_start_time_in_seconds = -abs(SolarThread.__turn_on_east_relay())
+        positive_manual_start_time = SolarThread.__turn_on_east_relay()                         #east is negative / west is postive
+        while (SolarThread.__time_in_seconds(SolarThread.get_time()) - positive_manual_start_time) < max_time:
+            logger.debugs("sleeping east")
+            ### #@GPIO@#      Enable/Disable GPIO
+            if Constants.RELAY_EAST == GPIO.LOW:
+                return 0
+            ##@GPIO@##        Enable/Disable #@GPIO@# ###
+            time.sleep(.5)
+        #SolarThread.__turn_off_east_relay_manual()  # <<<< fle::no member in class
+        SolarThread.__bypass_east_off = True
+
+    def go_to_vertical_manual(self):  # <<< fle::no parameter::class method?
+        logger = SysLog.getLogger()
+        secsPerDeg = ConfigListOfDict.getInstance().findConfigDict(self.__macAddr, Constants.CFG_VALUE_SYS_TYPE_SLAVE).getTimeToMoveOneDegree()
+        distance_to_end = SolarThread.__degrees_at_end - SolarThread.__degrees_from_start
+        max_time = distance_to_end * secsPerDeg
+        SolarThread.__manual_start_time_in_seconds = SolarThread.__turn_on_west_relay()
+        while (SolarThread.__time_in_seconds(SolarThread.get_time()) - SolarThread.__manual_start_time_in_seconds) < max_time:
+            logger.debugs("sleeping")
+            ### #@GPIO@#      Enable/Disable GPIO
+            if Constants.RELAY_WEST ==  GPIO.LOW:
+                return 0
+            ##@GPIO@##        Enable/Disable #@GPIO@# ###
+            time.sleep(.5)
+        #SolarThread.__turn_off_west_relay_manual()  # <<<< fle::no member in class
+        
+    def go_to_horizontal_manual(self):
+        logger = SysLog.getLogger()
+        
+        # distance_to_start = SolarThread.__degrees_from_start  <<<< fle::unused
+        max_time = SolarThread.__degrees_from_start * secsPerDeg
+        SolarThread.__manual_start_time_in_seconds = -abs(SolarThread.__turn_on_east_relay())
+        positive_manual_start_time = SolarThread.__turn_on_east_relay()                         #east is negative / west is postive
+        while (SolarThread.__time_in_seconds(SolarThread.get_time()) - positive_manual_start_time) < max_time:
+            logger.debugs("sleeping east")
+            ### #@GPIO@#      Enable/Disable GPIO
+            if Constants.RELAY_EAST == GPIO.LOW:
+                return 0
+            ##@GPIO@##        Enable/Disable #@GPIO@# ###
+            time.sleep(.5)
+        #SolarThread.__turn_off_east_relay_manual()  # <<<< fle::no member in class
+
+    @staticmethod
+    def __turn_on_west_relay():
+        ### #@GPIO@#      Enable/Disable GPIO
+        GPIO.output(Constants.RELAY_EAST, GPIO.LOW)
+        ##@GPIO@##        Enable/Disable #@GPIO@# ###
+        time.sleep(2)
+        start_time = SolarThread.__time_in_seconds(SolarThread.get_time())
+        ### #@GPIO@#      Enable/Disable GPIO
+        GPIO.output(Constants.RELAY_WEST, GPIO.HIGH)
+        ##@GPIO@##        Enable/Disable #@GPIO@# ###
+        return start_time
+
+    @staticmethod
+    def __turn_on_east_relay():
+        ### #@GPIO@#      Enable/Disable GPIO
+        GPIO.output(Constants.RELAY_WEST, GPIO.LOW)
+        ##@GPIO@##        Enable/Disable #@GPIO@# ###
+        time.sleep(2)
+        start_time = -abs(SolarThread.__time_in_seconds(SolarThread.get_time()))
+        ### #@GPIO@#      Enable/Disable GPIO
+        GPIO.output(Constants.RELAY_EAST, GPIO.HIGH)
+        ##@GPIO@##        Enable/Disable #@GPIO@# ###
+        return start_time
+
+    @staticmethod
+    def turn_off_west_relay_manual():
+        if SolarThread.__bypass_west_off:
+            SolarThread.__bypass_west_off = False
+            return
+
+        end_time = SolarThread.__time_in_seconds(SolarThread.get_time())
+        ### #@GPIO@#      Enable/Disable GPIO
+        GPIO.output(Constants.RELAY_WEST, GPIO.LOW)
+        ##@GPIO@##        Enable/Disable #@GPIO@# ###
+        SolarThread.__compute_total_time_moved(end_time)
+
+    @staticmethod
+    def turn_off_east_relay_manual():  #bypass for case in which max angle is reached and user still has to lift finger/avoids doubly calling method and skewing end_time
+        if SolarThread.__bypass_east_off:
+            SolarThread.__bypass_east_off = False
+            return
+        end_time = -abs(SolarThread.__time_in_seconds(SolarThread.get_time()))
+        SolarThread.__turn_off_east_relay()
+        SolarThread.__compute_total_time_moved(end_time)
+
+    @staticmethod
+    def __turn_off_east_relay():
+        ### #@GPIO@#      Enable/Disable GPIO
+        GPIO.output(Constants.RELAY_EAST, GPIO.LOW)
+        ##@GPIO@##        Enable/Disable #@GPIO@# ###
+        return
+
+    @staticmethod
+    def __turn_off_west_relay():
+        ### #@GPIO@#      Enable/Disable GPIO
+        GPIO.output(Constants.RELAY_WEST, GPIO.LOW)
+        ##@GPIO@##        Enable/Disable #@GPIO@# ###
+        return
+
+    @staticmethod
+    def turn_off_relays():
+        ### #@GPIO@#      Enable/Disable GPIO
+        GPIO.output(Constants.RELAY_WEST, GPIO.LOW)
+        GPIO.output(Constants.RELAY_EAST, GPIO.LOW)
+        ##@GPIO@##        Enable/Disable #@GPIO@# ###
+        return
+
+    @classmethod
+    def __compute_total_time_moved(cls, end_time):
+        logger = SysLog.getLogger()
+        start_time = cls.__manual_start_time_in_seconds
+        logger.debugs("start_time %d" % start_time)
+        logger.debugs("end_time %d" % end_time)
+        instance_time = end_time - start_time
+
+        logger.debugs("instance_time %d" % instance_time)
+        cls.__total_seconds_to_move = cls.__total_seconds_to_move + instance_time
+        cls.__manual_start_time_in_seconds = 0
+        logger.debugs("SolarThread.__total_seconds_to_move %d" % cls.__total_seconds_to_move)
+
+    @staticmethod
+    def __time_in_seconds(t):
+        return  t.timestamp()
+
+### #@GPIO@#      Enable/Disable GPIO
+##@GPIO@##        Enable/Disable #@GPIO@# ###
+
+
+'''
+    def set_angle_to_30_degrees(self):  #how to call under loss of power  go to vertical/go to horizontal?
+        super().__set_stop_threads(true)
+        current_angle = self.get_time_of_last_recorded_
+azimuth()
+
+        if(self.__vertical == true):
+            __set_angle_to_30_degrees_from_vertical()
+        elif(self.__horizontal == true):
+            __set_angle_to_30_degrees_from_horizontal()
+        else:
+            __set_angle_to_30_from_tracking()
+
+    def set_horizontal(self, bool):
+        self.__horizontal = bool
+        self.__vertical = not bool
+
+    def set_vertical(self, bool):
+        self.__horizontal = bool
+        self.__vertical = not bool
+'''
+###

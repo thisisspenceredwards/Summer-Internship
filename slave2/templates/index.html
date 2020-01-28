@@ -1,0 +1,38 @@
+{% extends "bootstrap/base.html" %}
+
+{% block content %}
+<script type="text/javascript" src="{{url_for('static', filename='socket.io.min.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='jQueryfordevelopment.js') }}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='bootstrap.js') }}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='sockets.js') }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style3.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap.css')}}">
+
+<div id="holder">
+<div id="container"></div>
+</div>
+<div id="lastPressed">{{currentTask}}</div>
+<div id="angle">{{currentAngleOfPanel|round(2)}} degrees</div>
+</div>
+<div id= "page" class="page">
+                
+    <div id= "buttons" class="btn-group-lg btn-group-vertical">
+   <!-- <button id="heldButtonWest" type="button" class="btn btn-primary btn-lg btn-block">West</button>
+    <button id="heldButtonEast" type="heldButtonEast" class="btn btn-primary btn-block btn-lg">East</button>
+    --><button id="solarPredicting"  type="button"class="btn btn-primary btn-block btn-lg" onclick="start_solar_predicting()">Track Sun</button>
+    <button id="eveningPosition"  type="button" class="btn btn-primary btn-block btn-lg" onclick="go_to_evening_position()">Evening Position</button>
+    <button id="morningPosition" type="button" class="btn btn-primary btn-block btn-lg" onclick="go_to_morning_position()">Morning Position</button>
+    <button id="halt" class="btn btn-primary btn-block btn-lg" onclick="halt_movement()">Halt Movement</button>
+    <button id="calibrate" type="button" class="btn btn-primary btn-block btn-lg" onclick="calibrate()">Calibrate</button>
+    <button id="22Degrees" type="button" class="btn btn-primary btn-block btn-lg" onclick="move_to_22_degrees()">22 Degrees</button>
+    <script> console.log("button_state" + {{button_state}}); {{button_state}}() </script>
+
+    </div>
+
+</div>
+</div>
+</div>
+    <button id="shutoff" type="button" class="btn btn-primary btn-lg" onclick="shut_off()">Shut Off</button>
+
+<body onload="onload_set_animation({{currentAngleOfPanel}})">
+{% endblock %}

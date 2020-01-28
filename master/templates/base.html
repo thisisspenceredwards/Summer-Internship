@@ -1,0 +1,53 @@
+{% extends 'bootstrap/base.html' %} {% block head %}
+
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/darkly/bootstrap.min.css" rel="stylesheet" integrity="sha384-w+8Gqjk9Cuo6XH9HKHG5t5I1VR4YBNdPt/29vwgfZR485eoEJZ8rJRbm3TR32P6k" crossorigin="anonymous">
+  <link rel="stylesheet" type= "text/css" href="{{ url_for('static', filename='style3.css') }}"></link>
+<!--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<!--  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script> -->
+ <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
+
+{% endblock %}
+{% block navbar %}
+<div id="myNav" class="overlay">
+  <div id="myNav-Content" class="overlay-content">
+    <a href="#">About</a>
+    <a href="#">Services</a>
+    <a href="{{ url_for('graph')}}">Graphs</a>
+    <a href="#">Contact</a>
+  </div>
+</div>
+<a onclick="openNav()">
+  {% include 'globalIcon.html' %}
+</a>
+<!-- <span id = "navSpan" style="color:white;z-index:5;position:absolute;left:5vh;font-size:10vh;cursor:pointer" onclick="openNav()">&#9776;</span>
+--> 
+<script>
+   let navOpen=false
+   function openNav() {
+      if(navOpen== false)
+      {
+      document.getElementById("myNav").style.width = "100%";
+      document.getElementById("myNav-Content").style.width = "100%";
+     /* document.getElementById("svgGlobe").color = "white"*/
+      navOpen=true
+      }
+      else
+      {
+      closeNav()
+      navOpen=false
+      }
+}
+
+  function closeNav() {
+      console.log("closeNav")
+      document.getElementById("myNav").style.width = "0%";
+/*      document.getElementById("svgGlobe").color = "#303030";*/
+    }
+</script>
+
+{% endblock %}
+
+{% block content %}
+{% endblock %}

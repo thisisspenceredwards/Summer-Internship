@@ -1,0 +1,252 @@
+{% extends 'bootstrap/base.html' %}
+{% block head %}
+
+    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/darkly/bootstrap.min.css" rel="stylesheet" integrity="sha384-w+8Gqjk9Cuo6XH9HKHG5t5I1VR4YBNdPt/29vwgfZR485eoEJZ8rJRbm3TR32P6k" crossorigin="anonymous"> 
+   <link rel="stylesheet" type= "text/css" href="{{ url_for('static', filename='style3.css') }}"></link>
+   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+   <script type="text/javascript" src="{{ url_for('static', filename='socketInstance.js') }}"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+   <script type="text/javascript" src="{{ url_for('static', filename='moment.js')}}"></script>
+   <script type="text/javascript" src="{{ url_for('static', filename='Chart.min.js')}}"></script>
+   <script type="text/javascript" src="{{ url_for('static', filename='chartjs-plugin-streaming.min.js')}}"></script> 
+ {% endblock %}
+
+
+{% block content %}
+<a  href="{{ url_for('renderOverlay')}}">
+{% include 'globalIcon.html' %}
+</a>
+<canvas id="myChart"></canvas>
+<canvas id="myChart2"></canvas>
+<canvas id="myChart3"></canvas>
+<script>
+let labels = []
+let keys = {{ alteredKeys|tojson }}
+let values = {{ alteredValues|tojson}}
+let unalteredKeys = {{ unalteredKeys|tojson }}
+let unalteredValues = {{ unalteredValues|tojson }}
+console.log(keys)
+console.log(values)
+let index = []
+indexCount = 0
+/*for(let j = 1; j<= 12; j++){
+    for(let i = 0; i < 60; i = i+5)
+    {
+       labels.push( ("00" + j).slice(-2,) + ":"+ ("00" + i).slice(-2) + ":" + "00")
+       data.push(Math.random() * 10)
+       index.push(indexCount)
+       indexCount = indexCount + 1
+    }
+}
+    
+*/
+var ctx3 = document.getElementById('myChart3').getContext('2d');
+let chart3 = new Chart(ctx3, {
+    type: 'line',
+    data:
+    {
+        labels: unalteredKeys,
+
+        datasets:
+        [{
+            data: unalteredValues,
+            borderColor: 'rbg(255, 30, 253)',
+            lineTension: 0,
+            borderDash:[8,4],
+            backgroundColor: 'rgb(0,200,123, 0.5)',
+         }]
+     },
+     options: {
+         scales:   {
+                       type: 'time',
+                       time: {
+                                  unit: 'minute'
+                             }
+                   },
+         elements: {
+                      point: {
+                               radius: 2,
+                               pointHitRadius: 5
+                             }
+                   },
+         line: {
+                  tension: 0
+               },
+        animation: {
+                    duration: 0
+                   },
+       hover: {
+                animationDuration: 0
+              },
+  responsiveAnimationDuration: 0
+      }
+})
+
+
+
+
+
+
+
+
+
+
+
+var ctx2 = document.getElementById('myChart2').getContext('2d');
+let chart2 = new Chart(ctx2, {
+    type: 'line',
+    data:
+    {
+        labels: keys,
+
+        datasets:
+        [{
+            data: values,
+            borderColor: 'rbg(255, 30, 253)',
+            lineTension: 0,
+            borderDash:[8,4],
+            backgroundColor: 'rgb(0,200,123, 0.5)',
+         }]         
+     },
+     options: {
+         scales:   {
+                       type: 'time',
+                       time: {
+                                  unit: 'second'
+                             }
+                   },
+         elements: {
+                      point: {
+                               radius: 2,
+                               pointHitRadius: 5
+                             }
+                   },
+         line: {
+                  tension: 0
+               },
+        animation: {
+                    duration: 0
+                   },
+       hover: {
+                animationDuration: 0
+              },
+       responsiveAnimationDuration: 0
+      }
+})
+
+function addData(chart, label, data){
+   if( chart.data.labels.length > 200)
+   {
+      chart.data.labels.splice(0,1)
+   }
+   chart.data.labels.push(label);
+   chart.data.datasets.forEach((dataset) => {
+       dataset.data.push(data)
+   if( dataset.data.length > 200)
+   {
+       dataset.data.splice(0,1)
+   }
+   });
+   chart.update()
+}
+
+
+
+
+
+</script>
+<script>
+var ctx1 = document.getElementById('myChart').getContext('2d');
+
+var chart = new Chart(ctx1, {
+
+  type: 'line',
+
+  data: {
+
+    datasets: [{
+      
+      data: [],
+      label: 'watts/second',
+      borderColor: 'rbg(255, 99, 132)',
+      lineTension: 0,
+      borderDash:[8,4],
+      backgroundColor: 'rgb(255, 99, 132, 0.5)'
+    }, {
+
+      data: [],
+      label: 'DataSet 2',
+      borderColor: 'rgb(54, 162, 235)',
+      backgroundColor: 'rgb(54,162, 235, 0.5)'
+    }]
+
+  },
+
+  options: 
+{
+    title:
+ {
+    display: true,
+    text: "Realtime output",
+    fontSize: 16 
+ },
+    legend:
+ { 
+    display: true,
+ },
+    scales: 
+ {
+     yAxes:
+            [{
+                 scaleLabel:
+                       {display: true,
+                        labelString:"Watts"
+                       }
+            }],
+
+      xAxes: 
+   [{
+       scaleLabel:
+            {display: true,
+             labelString: "Time"
+            },
+        type: 'realtime',
+        realtime: 
+     {
+           duration: 20000,
+           delay: 4000,
+           frameRate: 10,
+           onRefresh: function(chart)
+      {
+
+             chart.data.datasets.forEach(function(dataset) 
+         {
+
+              dataset.data.push(
+           {
+
+                x: Date.now(),
+
+                y: Math.random()
+           })
+         })
+        }
+      }
+    }],
+  }
+ }
+
+})
+</script>
+<script>
+/*socket.on('altitudeJs', function(data){
+    addData(chart2, new Date(), '7' )
+    })
+*/
+</script>
+
+
+{% endblock %}
+
+
+

@@ -1,0 +1,59 @@
+
+WebSockets
+
+See
+	https://websockets.readthedocs.io/en/stabl
+
+
+********************
+If version of python is important then first verify current version with command:
+
+		python3 -V
+		
+
+
+********************
+			
+
+
+Doc says use python 3.6+
+
+RPi comes with Python 3.5
+
+1.	Built Python 3.7.2
+	See /home/pi/Documments/Notes.txt
+
+			
+2.	Setup virtual environment
+
+	Make sure we use Python 3.7+
+
+	See http://raspberrypi-aa.github.io/session4/venv.html	
+
+	THE FOLLOWING DID NOT WORK---IT CREATED A VERSION 3.5 ENV
+	
+	Install virtualenv utility
+
+			sudo pip install virtualenv
+	
+	Create virtual environment inside WebSockets
+	
+			virtualenv venv
+
+	Activate venv
+	
+			cd venv
+			source bin/activate
+
+3.	THE FOLLOWING CREATED & ACTIVATED A 3.7 VIRTUAL ENV
+	
+			cd WebSockets
+			pyvenv-3.7 venv  <<<<<<<<<<<<<<<<<<<<<<<<<***********************
+			source venv/bin/activate
+	
+4. If not already installed, install websockets
+
+			pip install websockets
+
+
+

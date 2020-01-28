@@ -1,0 +1,66 @@
+{% extends 'bootstrap/base.html'  %}
+
+{% block content %}
+{% include 'base.html' %}
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfO5PY5amy-OzmTLT1FCbLaxQiXhG6puM
+&callback=initMap">
+</script>
+<style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+<div id="map"></div>
+    <script>
+
+      function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 18,
+          center: {lat: 38.0040558, lng: -121.8755571}
+        });
+
+        var bounds = {
+          17: [[21162, 50556], [21162, 50556]],
+          18: [[42324, 101112], [42323, 101112]],
+          19: [[84649, 202225], [84650, 202226]],
+          20: [[169299, 404450], [169300, 404451]]
+        };
+
+        var imageMapType = new google.maps.ImageMapType({
+          getTileUrl: function(coord, zoom) {
+            if (zoom < 17 || zoom > 20 ||
+                bounds[zoom][0][0] > coord.x || coord.x > bounds[zoom][0][1] ||
+                bounds[zoom][1][0] > coord.y || coord.y > bounds[zoom][1][1]) {
+              return null;
+            }
+
+            return [ src="{{ url_for('static', filename='IMG_2114.jpg')}}"] /*,
+                zoom, '_', coord.x, '_', coord.y, '.png'].join('');*/
+          },
+          tileSize: new google.maps.Size(256, 256)
+        });
+
+        map.overlayMapTypes.push(imageMapType);
+      }
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

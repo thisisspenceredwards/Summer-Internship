@@ -1,0 +1,98 @@
+######################################################################
+""" Constants.py :: Contains all the (global) constants """
+
+CFG_MQTT_SUBSCRIBE_ALL = '#'
+
+CFG_FILE_PATH = './'
+CFG_FILE_NAME_DHCP    = 'dhcpConfig.json'
+CFG_FILE_NAME_STARTUP = 'startupBroker.json'
+
+CFG_FILE_NAME_DEBUG_DHCP    = 'debugDhcpConfig.json'
+CFG_FILE_NAME_DEBUG_MASTER  = 'debugMasterConfig.json'
+CFG_FILE_NAME_DEBUG_MONITOR = 'debugMonitorConfig.json'
+CFG_FILE_NAME_DEBUG_SLAVE   = 'debugSlaveConfig.json'
+
+
+ICON_GREEN_DOT = "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+ICON_BLUE_DOT = "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+
+"""
+NOTE:
+    For every DHCP entry, create 
+        1 -- a constant for each KEY
+        2 -- a constant for every known value
+        3 -- an entry in the DEFAULT DHCP Dictionary
+"""
+
+#CFG_KEY_INFOBOX        = "infobox"
+CFG_KEY_COMMAND        = "command"
+CFG_KEY_COMMENT        = "comment"
+CFG_KEY_GPS            = "gps"
+CFG_KEY_PORT_HTTP      = "httpPort"
+CFG_KEY_ICON           = "icon"
+CFG_KEY_IP_ADDR        = "ipAddr"
+CFG_KEY_LAT            = "lat"
+CFG_KEY_LNG            = "lng"
+CFG_KEY_MAC_MASTER     = "macMaster"
+CFG_KEY_MAC_SELF       = "macSelf"
+CFG_KEY_MQ_PUB         = "mqPub"
+CFG_KEY_MQ_SUB         = "mqSub"
+CFG_KEY_MSG_FIRST      = "msgFirst"
+CFG_KEY_MSG_LAST       = "msgLast"
+CFG_KEY_SYS_STATUS     = "sysStatus"
+CFG_KEY_SYS_NAME       = "sysName"
+CFG_KEY_SYS_TYPE       = "sysType"
+CFG_KEY_TITLE          = "title"
+CFG_KEY_TOPIC_ROOT     = "topicRoot"
+
+CFG_VALUE_SYS_TYPE_BROKER  = "broker"
+CFG_VALUE_SYS_TYPE_DHCP    = "dhcp"
+CFG_VALUE_SYS_TYPE_ERROR   = "error"
+CFG_VALUE_SYS_TYPE_MASTER  = "master"
+CFG_VALUE_SYS_TYPE_MONITOR = "monitor"
+CFG_VALUE_SYS_TYPE_SLAVE   = "slave"
+
+CFG_VALUE_DEFAULT_GPS        = "0.0,0.0"
+CFG_VALUE_DEFAULT_PORT_HTTP  = 5000
+CFG_VALUE_DEFAULT_ICON       = ICON_BLUE_DOT
+CFG_VALUE_DEFAULT_IP         = "0.0.0.0"
+CFG_VALUE_DEFAULT_FLOAT      = "0.0"
+CFG_VALUE_DEFAULT_HEX        = "0"
+CFG_VALUE_DEFAULT_INT        = "0"
+CFG_VALUE_DEFAULT_STRING     = ""
+CFG_VALUE_DEFAULT_CONNECT    = "connect"
+
+CFG_DEFAULT_DHCP_RECORD = {
+    CFG_KEY_COMMAND        : CFG_VALUE_DEFAULT_STRING    ,
+    CFG_KEY_COMMENT        : CFG_VALUE_DEFAULT_STRING    ,
+    CFG_KEY_GPS            : CFG_VALUE_DEFAULT_GPS       ,
+    CFG_KEY_PORT_HTTP      : CFG_VALUE_DEFAULT_PORT_HTTP ,
+    CFG_KEY_ICON           : CFG_VALUE_DEFAULT_ICON      ,
+    CFG_KEY_IP_ADDR        : CFG_VALUE_DEFAULT_IP        ,
+    CFG_KEY_LAT            : CFG_VALUE_DEFAULT_FLOAT     ,
+    CFG_KEY_LNG            : CFG_VALUE_DEFAULT_FLOAT     ,
+    CFG_KEY_MAC_MASTER     : CFG_VALUE_DEFAULT_HEX       ,
+    CFG_KEY_MAC_SELF       : CFG_VALUE_DEFAULT_HEX       ,
+    CFG_KEY_MQ_PUB         : CFG_VALUE_DEFAULT_STRING    ,
+    CFG_KEY_MQ_SUB         : CFG_VALUE_DEFAULT_STRING    ,
+    CFG_KEY_MSG_FIRST      : CFG_VALUE_DEFAULT_INT       ,
+    CFG_KEY_MSG_LAST       : CFG_VALUE_DEFAULT_INT       ,
+    CFG_KEY_SYS_STATUS     : CFG_VALUE_DEFAULT_STRING    ,
+    CFG_KEY_SYS_NAME       : CFG_VALUE_DEFAULT_STRING    ,
+    CFG_KEY_SYS_TYPE       : CFG_VALUE_DEFAULT_STRING    ,
+    CFG_KEY_TITLE          : CFG_VALUE_DEFAULT_STRING    ,
+    CFG_KEY_TOPIC_ROOT     : CFG_VALUE_DEFAULT_STRING    ,
+}
+
+######################################################################
+
+
+#Solar thread constants
+ST_TIME_MOVE = 2
+ST_TIME_WAIT_SHORT = 3
+ST_TIME_LONG = ST_TIME_MOVE + ST_TIME_WAIT_SHORT
+ST_ANGLE = 0.1
+ST_LATITUDE = 36.9821103
+ST_LONGITUDE = -121.9722696
+
+ST_CNTRL_SLEEP_TIME = 5

@@ -1,0 +1,46 @@
+/*var svgBox = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+    svgBox.setAttribute("viewBox", "0 0 100 100")
+    svgBox.setAttribute("width", "100%")
+    svgBox.setAttribute("height", "100%")
+    svgBox.setAttribute("id", "svgBox")
+    svgBox.setAttribute("fill", "blue")
+    let container = document.getElementById("container")
+    container.appendChild(svgBox)
+    line = document.createElementNS("http://www.w3.org/2000/svg", "line")
+    rect = document.createElementNS("http://www.w3.org/2000/svg", "rect")
+    rect.setAttribute("id", "rect")
+    rect.setAttribute("width", "30vh")
+    rect.setAttribute("height", "30vh")
+    rect.setAttribute("stroke", "white")
+    line.setAttribute("x1", "0vh")
+    line.setAttribute("x2", "100%")
+    line.setAttribute("y1", "0vh")
+    line.setAttribute("y2", "100%")
+    line.setAttribute("id", "line")
+    line.setAttribute("stroke", "blue")
+    line.setAttribute("background-color", "blue")
+  
+  svgBox.appendChild(line)
+*/
+    $("#container").velocity({
+                         properties: { rotateZ: "360deg"},
+                         options: {loop: false,duration: 1000, easing: "linear"}
+                       })
+
+var jQueryScript = document.createElement('script');  
+jQueryScript.setAttribute('src','https://cdnjs.cloudflare.com/ajax/libs/velocity/1.5.2/velocity.js');
+document.head.appendChild(jQueryScript);
+var jQueryScript2 = document.createElement('script');  
+jQueryScript2.setAttribute('src','https://cdnjs.cloudflare.com/ajax/libs/velocity/1.5.2/velocity.ui.js');
+document.head.appendChild(jQueryScript2);
+
+
+function moveLineGuide(degreesToMove){
+ let hi = $("#container")
+ console.log(hi)
+ $("#container").velocity({
+                         properties: { rotateZ: "360deg"},
+                         options: {easing: "linear"}
+                       })
+
+}

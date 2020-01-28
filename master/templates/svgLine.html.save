@@ -1,0 +1,75 @@
+
+{% block content %}
+<link rel="stylesheet" type= "text/css" href="{{ url_for('static', filename='style3.css') }}"></link>
+<script type="text/javascript" src="{{url_for('static', filename='jQueryfordevelopment.js') }}"></script>
+<script src= "https://cdnjs.cloudflare.com/ajax/libs/velocity/1.5.2/velocity.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.5.2/velocity.ui.js"></script>
+<div id="container"></div>
+ 
+
+
+
+{% endblock %}
+
+
+<script>
+
+    var svgBox = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+    svgBox.setAttribute("viewBox", "0 0 800 600")
+    svgBox.setAttribute("width", "100%")
+    svgBox.setAttribute("height", "100%")
+    svgBox.setAttribute("id", "svgBox")
+    container = document.getElementById("container")
+    container.appendChild(svgBox)    
+    line = document.createElementNS("http://www.w3.org/2000/svg", "line")
+    $rect = document.createElementNS("http://www.w3.org/2000/svg", "rect")
+    $rect.setAttribute("x", 40)
+    $rect.setAttribute("y", 80)
+    $rect.setAttribute("id", "rect")
+    $rect.setAttribute("width", 200)
+    $rect.setAttribute("height", 200)
+    $rect.setAttribute("stroke", "white")
+    line.setAttribute("x1", "0vh")
+    line.setAttribute("x2", "10vh")
+    line.setAttribute("y1", "0vh")
+    line.setAttribute("y2", "10vh")
+    line.setAttribute("stroke", "black")
+    line.setAttribute("stroke-width", "3")
+    svgBox.appendChild(line)
+    svgBox.appendChild($rect)
+
+ var value = 360; //animate to  
+        var steps = 6; //animation steps per frame (1/60sec.) 
+        var time = (1000 / 60) * (value / steps); //animation time
+
+        $('#rect').velocity({ rotate
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

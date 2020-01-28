@@ -1,0 +1,15 @@
+ [Unit]
+ Description=Slave Startup Service
+ After=multi-user.target
+
+ [Service]
+ WorkingDirectory=/home/pi/raspberry30
+ Type=idle
+ ExecStart=/home/pi/.local/bin//python3.7 -u /home/pi/raspberry30/slave2/Slave.$
+ Restart=always
+ RestartSec=10s
+ KillMode=process
+ TimeoutSec=infinity
+ [Install]
+ WantedBy= multi-user.target
+

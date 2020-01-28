@@ -1,0 +1,12 @@
+
+Used startx.  Opened new shell with login.  Unable to login.  Had to change 
+permissions of shell using:
+
+Ctrl+Alt+F2 to get to a text-console with a login prompt. Log in.  Default
+user is "pi" with password "raspberry".
+
+At command prompt, enter 
+
+	sudo chown pi:pi ~/.Xauthority
+	touch .~/.Xauthority
+	sudo reboot

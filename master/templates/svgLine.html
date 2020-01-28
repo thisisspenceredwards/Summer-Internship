@@ -1,0 +1,78 @@
+
+{% block content %}
+<link rel="stylesheet" type= "text/css" href="{{ url_for('static', filename='style3.css') }}"></link>
+<script type="text/javascript" src="{{url_for('static', filename='jQueryfordevelopment.js') }}"></script>
+<script src= "https://cdnjs.cloudflare.com/ajax/libs/velocity/1.5.2/velocity.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.5.2/velocity.ui.js"></script>
+<div id="container"></div>
+ 
+
+
+
+{% endblock %}
+
+
+<script>
+    let div = document.getElementById("container")
+    $("div").velocity({
+                         properties: { rotateZ: "360deg"},
+                         options: {loop: true,duration: 1000, easing: "linear"}
+                       })
+
+    var svgBox = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+    svgBox.setAttribute("viewBox", "0 0 100 100")
+    svgBox.setAttribute("width", "100%")
+    svgBox.setAttribute("height", "100%")
+    svgBox.setAttribute("id", "svgBox")  
+    svgBox.setAttribute("fill", "red")
+    container = document.getElementById("container")
+    container.appendChild(svgBox)    
+    line = document.createElementNS("http://www.w3.org/2000/svg", "line")
+    rect = document.createElementNS("http://www.w3.org/2000/svg", "rect")
+    rect.setAttribute("id", "rect")
+    rect.setAttribute("width", "30vh")
+    rect.setAttribute("height", "30vh")
+    rect.setAttribute("stroke", "white")
+    line.setAttribute("x1", "0vh")
+    line.setAttribute("x2", "100%")
+    line.setAttribute("y1", "0vh")
+    line.setAttribute("y2", "100%")
+    line.setAttribute("stroke", "black")
+    line.setAttribute("stroke-width", "3")
+    line.setAttribute("id", "line")
+    svgBox.appendChild(line)
+//    svgBox.appendChild(rect)
+/*    $("svgBox").velocity({
+                         properties: { rotateZ: "360deg"}, 
+                         options: {loop: true,duration: 1000, easing: "linear"}
+                       })
+    
+*/
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

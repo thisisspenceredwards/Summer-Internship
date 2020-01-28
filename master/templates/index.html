@@ -1,0 +1,180 @@
+
+{% extends "bootstrap/base.html" %}
+{% block head %}
+<link href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/darkly/bootstrap.min.css" rel="stylesheet" integrity="sha384-w+8Gqjk9Cuo6XH9HKHG5t5I1VR4YBNdPt/29vwgfZR485eoEJZ8rJRbm3TR32P6k" crossorigin="anonymous">
+<script type="text/javascript" src="{{url_for('static', filename='jQueryfordevelopment.js') }}"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='socketInstance.js') }}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='raspberryJs.js') }}"></script>
+{% endblock %}
+{% block content %}
+{% include 'base.html' %}
+
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<style type="text/css">
+html { overflow: hidden; }
+body { overflow: hidden; padding: 0; margin: 0;
+width: 100%; height: 100%; font-family: Trebuchet MS, Trebuchet, Arial, sans-serif; }
+#map { position: absolute; top: 10px; left: 10px; right: 10px; bottom: 15px; overflow: auto; }
+#footer { position: absolute; bottom: 0px; left: 0px; width:100%; height: 12px; overflow: hidden; }
+@media screen and (max-width: 600px) {
+  #map { top:0px; left:0px; width:100%; height:100%;}
+}
+body { background: #303030;}
+#header { background: #fff; box-shadow: 0 1px 3px #CCC; border: 1px solid #ccc; }
+#header h1 { padding:7px 10px; margin:0; font-size: 28px; }
+#map { border: 1px solid #ccc; box-shadow: 0 1px 3px #CCC; background-color: #DEDCD7;}
+#footer { text-align:center; font-size:9px; color:#606060; }
+</style>
+<script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyCfO5PY5amy-OzmTLT1FCbLaxQiXhG6puM&sensor=false"></script>
+<script type="text/javascript">
+var map;
+
+var mapBounds = new google.maps.LatLngBounds(
+new google.maps.LatLng(38.003412, -121.876348),
+    new google.maps.LatLng(38.004698, -121.874494));
+
+var mapMinZoom = 17;
+var mapMaxZoom = 22;
+var maptiler = new google.maps.ImageMapType({
+    getTileUrl: function(coord, zoom) { 
+        var proj = map.getProjection();
+        var z2 = Math.pow(2, zoom);
+        var tileXSize = 256 / z2;
+        var tileYSize = 256 / z2;
+        var tileBounds = new google.maps.LatLngBounds(
+            proj.fromPointToLatLng(new google.maps.Point(coord.x * tileXSize, (coord.y + 1) * tileYSize)),
+            proj.fromPointToLatLng(new google.maps.Point((coord.x + 1) * tileXSize, coord.y * tileYSize))
+        );
+        var x = coord.x >= 0 ? coord.x : z2 + coord.x
+        var y = coord.y;
+        if (mapBounds.intersects(tileBounds) && (mapMinZoom <= zoom) && (zoom <= mapMaxZoom))
+        {
+            let png = zoom + "/" + x + "/" + y + ".png";
+            return src ="{{ url_for('static', filename='png')}}".replace("png",png)
+        }
+        else
+            return "https://www.maptiler.com/img/none.png";
+    },
+    tileSize: new google.maps.Size(256, 256),
+    isPng: true,
+    name: "Rendered with MapTiler Desktop",
+    alt: "Rendered with MapTiler Desktop",
+
+    opacity: 1.0
+});
+function init() {
+    var opts = {
+        tilt:0,
+        streetViewControl: false,
+        center: new google.maps.LatLng(38.004055, -121.875521),
+        zoom: 19,
+        scaleControl: true,
+        streetViewControl: false,
+        rotateControl: false,
+        scrollwheel: true,
+        fullscreenControl: false,
+        //latLngBounds: {north: 38.00900, south: 38.00, west: -121.9, east: -121.9},
+        //strictBounds: true,
+        gestureHandling : "greedy",
+        minZoom: 17,
+        maxZoom: 22,
+        streetViewControlOptions: false,
+        rotateControlOptions: false,
+        panControlOptions: true,
+        mapTypeControlOptions: false,
+        mapTypeControl: false,
+        fullscreenControl: false,
+        fullscreenControlOptions: false
+
+    };
+    map = new google.maps.Map(document.getElementById("map"), opts);
+    map.setMapTypeId('terrain');
+    map.overlayMapTypes.insertAt(0, maptiler);
+    var mymap_markers = [];
+ // add gmap markers
+
+    var raw_markers = [{"icon": "http://maps.google.com/mapfiles/kml/paddle/red-circle.png", "lat": "38.00350", "lng": "-121.875000","title": "38.1644611,-120.9582994"}, {"icon": "http://maps.google.com/mapfiles/kml/paddle/blu-circle.png", "lat": "38.1645265", "lng": "-120.9582942", "title": "38.1645265,-120.9582942"}];
+        for(i=0; i<1;i++) {
+            mymap_markers[i] = new google.maps.Marker({
+                position: new google.maps.LatLng(raw_markers[i].lat, raw_markers[i].lng),
+                map: map,
+                icon: raw_markers[i].icon,
+                title: raw_markers[i].title ? raw_markers[i].title : null
+            });
+
+           if(raw_markers[i].infobox)
+           {
+                google.maps.event.addListener(
+                        mymap_markers[i],
+                        'click',
+         //               getInfoCallback(map, raw_markers[i].infobox)
+                );
+           }
+        }
+ addMarkerEventListeners(mymap_markers)  
+ addBounds(map)
+}
+
+
+
+function addMarkerEventListeners(mymap_markers) {
+        console.log('addMarkerEventListeners');
+        for (i =0; i < mymap_markers.length; i++) {
+        mymap_markers[i].addListener('click', function() {
+                        console.log('inside markerEventListener');
+//                      console.log(window.location);
+//                      console.log('url=', window.location.origin, '/', this.position.lat().toString(), ',', this.position.lng().toString());
+//                      console.log('url=', window.location.origin, '/', this.title);
+//                      console.log('url=>' + window.location.origin + '/' + this.title + '<');
+                        var newURL = window.location.origin + window.location.pathname + this.title;
+                        console.log('newURL=>' + newURL + '<');
+                        //window.location = newURL;
+                        console.log(this.title)
+                        let raspberry = this.title
+                        openMyMenu(raspberry)
+        });
+        }
+   }
+
+
+
+
+function addBounds(map)
+{
+var lastValidCenter = map.getCenter()
+
+google.maps.event.addListener(map, 'center_changed', function() {
+    if (mapBounds.contains(map.getCenter())) {
+        // still within valid bounds, so save the last valid position
+        lastValidCenter = map.getCenter();
+        return;
+    }
+
+    // not valid anymore => return to last valid position
+    map.panTo(lastValidCenter);
+});
+}
+
+</script>
+</head>
+<body onload="init()">
+<div id="footer">Rendered with <a href="https://www.maptiler.com/desktop/">MapTiler Desktop</a></div>
+
+
+<div id="map"></div>
+<div id="myMenu" class= "overlay-menuOuter">
+  <div id="toast" class="alert alert-dismissible alert-primary fade show" role="alert">
+  <span aria-hidden ="true">&times;</span>
+  </div>
+    <div id= "myMenu-Content" class="overlay-menuInner">
+    <div id= "buttonGroup"  class= "btn-group-horizontal">
+    <button id= "heldButtonWest" type="button" class="btn btn-primary btn-lg mb-3">West</button>
+    <button id="heldButtonEast"  type="button" class="btn btn-primary btn-lg mb-3">East</button>
+    <button id="solarPredict"    type="button" class="btn btn-primary btn-lg mb-3">Track Sun</button>
+    <button id="vertical"        type="button" class="btn btn-primary btn-lg mb-3">Vertical</button>
+    <button id="horizontal"      type="button" class="btn btn-primary btn-lg mb-3">Horizontal</button>
+    <button id="halt"            type="button" class="btn btn-primary btn-lg mb-3">Halt Movement</button>
+    </div>
+</body>
+{% endblock %}

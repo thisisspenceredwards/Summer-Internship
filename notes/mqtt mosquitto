@@ -1,0 +1,46 @@
+
+Install MQTT Mosquito Broker & Clients (for testing)
+
+From a terminal window:
+
+	sudo apt update
+	sudo apt upgrade
+	
+	sudo apt install mosquitto
+	sudo apt install mosquitto-clients
+
+To run mosquitto at boot up as a service:
+	sudo systemctl enable mosquitto.service
+
+To run mosquitto in background as a daemon add -d option
+	mosquitto -d 
+
+To test installation
+	mosquitto -v
+
+	Message Error Address already in use means mosquitto is running
+
+	mosquitto_sub -t testTopic
+	mosquitto_pub -t testTopic -m "Hello world!"
+
+Show all running processes with "mos" in name
+	ps aux | grep mos
+
+Kill process use PID from previous
+	sudo kill -s SIGINT <PID> 
+
+
+By default, installing mosquitto starts it as a service.  To start & stop a service:
+	sudo service stop mosquitto
+	sudo service start mosquitto
+
+To permanently disable service is more involved.  Search for something similar to
+	How to remove systemd services
+
+Also, see 
+	https://www.raspberrypi.org/documentation/linux/usage/systemd.md
+for a discussion of systemd services on rPi
+
+
+
+

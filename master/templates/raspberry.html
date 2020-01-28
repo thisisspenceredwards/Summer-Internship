@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content%}
+<div id="myMenu" class= "overlay-menuOuter">
+  <div id="toast" class="alert alert-dismissible alert-primary fade show" role="alert">
+  <span aria-hidden ="true">&times;</span> 
+  </div>
+    <div id= "myMenu-Content" class="overlay-menuInner">
+    <div id= "buttonGroup"  class= "btn-group-horizontal">
+    <button id= "heldButtonWest" type="button" class="btn btn-primary btn-lg mb-3">West</button>
+    <button id="heldButtonEast"  type="button" class="btn btn-primary btn-lg mb-3">East</button>
+    <button id="solarPredict"    type="button" class="btn btn-primary btn-lg mb-3">Track Sun</button>
+    <button id="vertical"        type="button" class="btn btn-primary btn-lg mb-3">Vertical</button>
+    <button id="horizontal"      type="button" class="btn btn-primary btn-lg mb-3">Horizontal</button>
+    <button id="halt"            type="button" class="btn btn-primary btn-lg mb-3">Halt Movement</button>
+    </div>
+
+{% endblock %}
+

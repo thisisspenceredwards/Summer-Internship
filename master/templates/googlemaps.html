@@ -1,0 +1,80 @@
+<!--{% extends 'bootstrap/base.html'  %}
+-->
+{% block content %}
+<script type="text/javascript" src="{{url_for('static', filename='jQueryfordevelopment.js') }}"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='socketInstance.js') }}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='raspberryJs.js') }}"></script>
+<div id = "map">
+{{ mymap.js }} 
+
+<body onload=addMarkerEventListeners()>
+<!--{{mymap.html}} --> 
+
+
+
+<!--
+	When the body of the web page (the document) has fully loaded, the system generates
+	an 'onload' event.  We catch that event here, and use it to add listeners to all of
+	the map markers.  (See the function addMarkerEventListeners, below).  There is one 
+	map marker per raspberry on the map.
+-->
+
+{{mymap.html}} 
+
+<script>
+
+/*function addMarkerEventListeners() {
+	for (i =0; i < mymap_markers.length; i++) {
+	console.log('addMarkerEventListeners');
+        console.log(mymap_markers[i])
+     	mymap_markers[i].addListener('click', function() {
+			console.log('inside markerEventListener');
+//			console.log(window.location);
+//			console.log('url=', window.location.origin, '/', this.position.lat().toString(), ',', this.position.lng().toString());
+//			console.log('url=', window.location.origin, '/', this.title);
+//			console.log('url=>' + window.location.origin + '/' + this.title + '<');
+			var newURL = window.location.origin + window.location.pathname + this.title;
+			console.log('newURL=>' + newURL + '<');
+			//window.location = newURL;
+                        console.log(this.title)
+                        let raspberry = this.title
+                        openMyMenu(raspberry)
+        });
+	}
+   }
+*/
+</script>
+</div>
+{% include 'base.html'%}
+{% include 'raspberry.html' %}
+<script>
+
+function addMarkerEventListeners() {
+        for (i =0; i < mymap_markers.length; i++) {
+        console.log('addMarkerEventListeners');
+        console.log(mymap_markers[i])
+        mymap_markers[i].addListener('click', function() {
+                        console.log('inside markerEventListener');
+//                      console.log(window.location);
+//                      console.log('url=', window.location.origin, '/', this.position.lat().toString(), ',', this.position.lng().toString());
+//                      console.log('url=', window.location.origin, '/', this.title);
+//                      console.log('url=>' + window.location.origin + '/' + this.title + '<');
+                        var newURL = window.location.origin + window.location.pathname + this.title;
+                        console.log('newURL=>' + newURL + '<');
+                        //window.location = newURL;
+                        console.log(this.title)
+                        let raspberry = this.title
+                        openMyMenu(raspberry)
+        });
+        }
+   }
+
+</script>
+
+{% endblock %}
+
+
+
+
+

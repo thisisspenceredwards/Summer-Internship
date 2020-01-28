@@ -1,0 +1,25 @@
+[
+    {
+
+        "command":"",
+        "comment" : "",
+        "gps":"38.1644611,-120.9582994",
+        "httpPort":5000,
+        "icon":"http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+        "ipAddr":"192.168.1.23",
+        "lat":"38.1644611",
+        "lng":"-120.9582994",
+        "macMaster":"",
+        "macSelf":"",
+        "macSelf":"",
+        "mqPub":"",
+        "mqSub":"",
+        "msgFirst":"",
+        "msgLast":"",
+        "sysName":"",
+        "sysStatus":"",
+        "sysType":"broker",
+        "title":"38.1644611,-120.9582994",
+        "topicRoot":"root"
+    }
+]

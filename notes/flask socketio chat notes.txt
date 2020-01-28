@@ -1,0 +1,20 @@
+
+From the video
+
+	Creating a Chat App with Flask-SocketIO
+
+
+See video at
+
+	https://www.youtube.com/watch?v=RdSrkkrj3l4
+
+
+See sources at
+
+	https://github.com/PrettyPrinted/flask-socketio-chat
+
+
+Downloaded as
+
+	flask-socketio-chat-master.zip
+

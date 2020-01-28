@@ -1,0 +1,23 @@
+{% extends 'base.html' %} {% block head %}
+<script type="text/javascript" src="{{url_for('static', filename='jQueryfordevelopment.js') }}"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='socketInstance.js') }}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='raspberryJs.js') }}"></script>
+
+{% endblock %}
+{% block content %}
+<div class="macGlobalIcon">
+</div>
+
+<div class="btn-group-vertical mb-3">
+
+{% for mac in macList %}
+    <button type="button" name= {{mac | string}} onclick="openMyMenu({{mac}})" class="btn btn-primary btn-lg mb-3">{{mac}}</button>
+{% endfor %}
+ </div>
+
+{% include 'raspberry.html' %}
+
+
+{% endblock %}
+

@@ -1,0 +1,163 @@
+
+
+##
+###################################################################################
+###################################################################################
+## 
+
+##
+###################################################################################
+###################################################################################
+## 
+
+(eWV?3]{40mZ_Kh97*-cNbef9Cner.2)
+(eWV?3]{40mZ_Kh97*-cNbef9Cner.2)
+
+##
+###################################################################################
+###################################################################################
+## 2019/06/08 BELOW
+
+
+https://tutorials.technology/tutorials/61-Create-an-application-with-websockets-and-flask.html
+
+Experimented with this tutorial; finally got it to work
+See WIP flask_websockets-final
+
+
+## 2019/06/08 ABOVE
+###################################################################################
+###################################################################################
+## 2019/06/05 BELOW
+
+
+Formatted 128 GB SD Card for RPi
+
+
+Built & Installed Python 3.7.2
+From
+	
+	https://www.scivision.dev/compile-install-python-beta-raspberry-pi/
+	https://lexruee.ch/installing-python-372-on-a-raspberry-piraspbian.html
+	
+Open a new shell & enter the following commands:
+
+		sudo apt install libffi-dev libbz2-dev liblzma-dev libsqlite3-dev libncurses5-dev libgdbm-dev zlib1g-dev libreadline-dev libssl-dev tk-dev build-essential libncursesw5-dev libc6-dev openssl git
+
+		wget https://www.python.org/ftp/python/3.7.2/Python-3.7.2.tgz
+
+		tar xfv Python-3.7.2.tgz
+
+		cd Python-3.7.2
+
+	   ./configure --prefix=$HOME/.local --enable-optimizations
+
+	   make -j -l 4
+
+	   make install
+
+		<edit> ~/.bashrc
+				add: export PATH=$HOME/.local/bin/:$PATH			// I put it at the end of the file
+				save & exit
+
+Open a new shell
+Verify version of python
+	
+		python3 --version
+		pip3 --version
+
+
+
+Opened new shell and entered command
+
+		python3 Python3.7AsyncioTest.py
+
+Output:
+		pi@RaspberryPi2:~/Projects/Misc $ python3 Python3.7AsyncioTest.py
+
+		started at 17:58:06
+		hello
+		world
+		finished at 17:58:09
+
+Ran Ex01-SimpleSock	OK
+
+
+
+## 2019/06/05 ABOVE
+###################################################################################
+###################################################################################
+## 2019/06/03 BELOW
+
+
+python2 --version
+python3 --version
+python  --version
+
+sudo find / -name python*
+
+sudo -H pip2 install --upgrade pip
+sudo -H pip3 install --upgrade pip
+
+	sudo	- super user do
+	-H 	- at/from home directory
+	
+	last version of pip (2 or 3) updated will be version run in the future by default (without a #)
+	
+
+sudo apt-get install bluefish
+
+sudo apt autoremove
+
+
+Update Python from 3.5 to 3.7.2
+===============================
+
+First, followed steps at
+
+		Installing Python 3.7.2 on a Raspberry Pi/Raspbian
+		https://lexruee.ch/installing-python-372-on-a-raspberry-piraspbian.html
+		
+The above procedure encountered an error and did not finish. Found another site (see next) to install python 3.7.2
+
+However, from above site created python file /home/pi/Projects/Misc/Python3.7AsyncioTest.py to use to test asyncio (See below)
+
+
+
+Next, followed steps at 
+
+		Compile/install Python 3.7 on Raspberry Pi
+		https://www.scivision.dev/compile-install-python-beta-raspberry-pi/
+
+to download, build and configure python 3.7.2 and to make it the preferred version of python3
+
+One of the changes was to add the following to  ~/.bashrc:
+
+	#for python 3.7.2
+	export PATH=$HOME/.local/bin/:$PATH
+
+python2 is still the preferred version of python
+
+
+
+Opened new shell and entered command
+
+		python3 Python3.7AsyncioTest.py
+
+Output:
+		pi@RaspberryPi2:~/Projects/Misc $ python3 Python3.7AsyncioTest.py
+		started at 22:41:45
+		hello
+		world
+		finished at 22:41:48
+		
+According to lexruee, that result indicates success
+
+
+NOTE  Next cold boot python3.5 was still active.  After playing around, somehow I made 3.7.2 active.  I don't know how I did it.
+
+## 2019/06/03 ABOVE
+###################################################################################
+###################################################################################
+##
+
