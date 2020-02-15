@@ -116,7 +116,7 @@ app.config['MQTT_TLS_ENABLED'] = False
 app.config['MQTT_LAST_WILL_TOPIC'] = 'home/lastwill'
 app.config['MQTT_LAST_WILL_MESSAGE'] = 'bye'
 app.config['MQTT_LAST_WILL_QOS'] = 2
-app.config['GOOGLEMAPS_KEY'] = "AIzaSyCfO5PY5amy-OzmTLT1FCbLaxQiXhG6puM"
+app.config['GOOGLEMAPS_KEY'] = ""
 
 #
 # Use a list of dictionaries to hold connected raspberries
