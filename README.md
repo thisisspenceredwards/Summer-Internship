@@ -20,7 +20,7 @@ Currently, there is an installation in Northern California testing the controlle
 
 There are a number of folders in this project.  The most relevant is 'Motor Testing'.
 
-Some of the other folders relate to our research and attempt to use Google's map API to programmatically set 
+Some of the other folders relate to the research and attempt to use Google's map API to programmatically set 
 the map location to above the solar installation, and then using GPS devices on each controller, have them set their coordinates on
 the UI.  This feature would have been a novel way to allow for a plug and play setup. However, we found that to get a GPS device
 that could be accurate enough to relay the proper coordinate to the backend would have been prohibitively expensive.  
