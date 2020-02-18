@@ -1,7 +1,5 @@
 """ sFlask/main.py Slave Raspberry Pi """
 
-#from gevent import monkey      ## ****** WHERE DOES THIS GO???? ******
-#monkey.patch_all()             ## ****** WHERE DOES THIS GO???? ******
 
 #import json
 #import logging
