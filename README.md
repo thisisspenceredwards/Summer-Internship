@@ -29,8 +29,4 @@ I have some other ideas for creating a user friendly and simple UI for connectin
 clearly corresponds to a specific rack.
 
 
-Multithreading (or as close to it as you can get with high level python)
-Pysolar - a python library for determining where the sun is (Azimuth) based on time and location.
-
-
 
